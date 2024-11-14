@@ -9,6 +9,7 @@ import Mango from '../assets/mango.png'
 import Pear from '../assets/pear.png'
 import Watermelon from '../assets/watermelon.png'
 import Stats from './Stats'
+import Message from './Message'
 
 export default function game() {
 
@@ -36,6 +37,7 @@ export default function game() {
   const [misses, setMisses] = useState(parseInt(localStorage.getItem('misses')) || 0);
   const [accuracy, setAccuracy] = useState(parseFloat(localStorage.getItem('accuracy')) || 0);
   const [gamesPlayed, setGamesPlayed] = useState(parseInt(localStorage.getItem('gamesPlayed')) || 0);
+  const [gameMessage, setGameMessage] = useState("")
 
   useEffect(() => {
     localStorage.setItem('score', score);
@@ -71,6 +73,8 @@ export default function game() {
           The Matching Game
         </h1>
 
+        <Message gameMessage={gameMessage}/>
+
         <Grid
           boxArray={boxArray}
           setBoxArray={setBoxArray}
@@ -79,6 +83,7 @@ export default function game() {
           misses={misses} setMisses={setMisses}
           accuracy={accuracy} setAccuracy={setAccuracy}
           gamesPlayed={gamesPlayed} setGamesPlayed={setGamesPlayed}
+          setGameMessage={setGameMessage}
         />
 
         <Stats
@@ -89,6 +94,8 @@ export default function game() {
           accuracy={accuracy}
           gamesPlayed={gamesPlayed}
         />
+
+        
 
       </div>
     </div>

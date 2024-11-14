@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Box from '../components/box'
 
-export default function grid({ boxArray, setBoxArray, score, moves, misses, accuracy, gamesPlayed, setScore, setMoves, setMisses, setAccuracy, setGamesPlayed }) {
+export default function grid({ boxArray, setBoxArray, score, moves, misses, accuracy, gamesPlayed, setScore, setMoves, setMisses, setAccuracy, setGamesPlayed, setGameMessage }) {
 
   const [firstCardSelected, setFirstCardSelected] = useState(-1)
   const [selectionInProgress, setSelectionInProgress] = useState(false)
@@ -28,7 +28,7 @@ export default function grid({ boxArray, setBoxArray, score, moves, misses, accu
     setSelectionInProgress(true)
 
     if (boxArray[firstCardSelected].num === boxArray[secondIndex].num) {
-      console.log("correct!");
+      setGameMessage("Nice! Keep Going!")
       
       boxArray[firstCardSelected].selected = "active"
       boxArray[secondIndex].selected = "active"
@@ -37,7 +37,7 @@ export default function grid({ boxArray, setBoxArray, score, moves, misses, accu
       updateStats(true)
       setSelectionInProgress(false)
     } else {
-      console.log("wrong");
+      setGameMessage("Wrong! Try Again!")
       updateStats(false)
       
       setTimeout(() => {
