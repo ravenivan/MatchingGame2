@@ -1,50 +1,72 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Box from '../components/box'
-import Apple from '../assets/apple.jpg'
-import Banana from '../assets/banana.jpg'
-import Cherry from '../assets/cherry.avif'
-import Grape from '../assets/grape.webp'
-import Kiwi from '../assets/kiwi.avif'
-import Mango from '../assets/mango.webp'
-import Pear from '../assets/pear.png'
-import Watermelon from '../assets/watermelon.avif'
 
-export default function grid() {
+export default function grid({ boxArray, setBoxArray, score, moves, misses, accuracy, gamesPlayed, setScore, setMoves, setMisses, setAccuracy, setGamesPlayed }) {
 
-  const [firstCardSelected, setFirstCardSelected] = useState()
-  const [secondCardSelected, setSecondCardSelected] = useState()
+  const [firstCardSelected, setFirstCardSelected] = useState(-1)
+  const [selectionInProgress, setSelectionInProgress] = useState(false)
 
 
-  const boxArray = [
-    { num: 1, src: Apple, selected: "" },
-    { num: 1, src: Apple, selected: ""} ,
-    { num: 2, src: Banana, selected: "" },
-    { num: 2, src: Banana, selected: "" },
-    { num: 3, src: Cherry, selected: "" },
-    { num: 3, src: Cherry, selected: "" },
-    { num: 4, src: Grape, selected: "" },
-    { num: 4, src: Grape, selected: "" },
-    { num: 5, src: Kiwi, selected: "" },
-    { num: 5, src: Kiwi, selected: "" },
-    { num: 6, src: Mango, selected: "" },
-    { num: 6, src: Mango, selected: "" },
-    { num: 7, src: Pear, selected: "" },
-    { num: 7, src: Pear, selected: "" },
-    { num: 8, src: Watermelon, selected: "" },
-    { num: 8, src: Watermelon, selected: "" },
-  ]
+  const storeCardSelected = (index) => {
 
-  console.log(dispatch(boxSelected(boxArray[0])));
-
-  const randomizeBoxes = () => {
-    for (let i = boxArray.length - 1; i > 0; i--) { 
-      const j = Math.floor(Math.random() * (i + 1)); 
-      [boxArray[i], boxArray[j]] = [boxArray[j], boxArray[i]]; 
-    } 
+    if (selectionInProgress || boxArray[index].selected === "active") return
+    
+    
+    if (firstCardSelected === -1) {
+      setFirstCardSelected(index)
+      
+      boxArray[index].selected = "active"
+      setBoxArray([...boxArray])
+    } else {
+      boxArray[index].selected = "active"
+      setBoxArray([...boxArray])
+      checkMatch(index)
+    }
   }
 
-  const storeCardSelected = (card) => {
-    firstCardSelected ? setSecondCardSelected(card) : setFirstCardSelected(card)
+  const checkMatch = (secondIndex) => {
+    setSelectionInProgress(true)
+
+    if (boxArray[firstCardSelected].num === boxArray[secondIndex].num) {
+      console.log("correct!");
+      
+      boxArray[firstCardSelected].selected = "active"
+      boxArray[secondIndex].selected = "active"
+      setBoxArray([...boxArray])
+      setFirstCardSelected(-1)
+      updateStats(true)
+      setSelectionInProgress(false)
+    } else {
+      console.log("wrong");
+      updateStats(false)
+      
+      setTimeout(() => {
+        boxArray[firstCardSelected].selected = ""
+        boxArray[secondIndex].selected = ""
+        setBoxArray([...boxArray])
+        setFirstCardSelected(-1)
+        setSelectionInProgress(false)
+      }, 500)
+    }
+  }
+
+  const updateStats = (outcome) => {
+    setMoves((moves) => moves + 1)
+    if (outcome) {
+      setScore((score) => {
+        const newScore = score + 1;
+        setAccuracy((newScore / (newScore + misses)) * 100 || 0); 
+        return newScore;
+      });
+    } else {
+      setMisses((misses) => {
+        const newMisses = misses + 1;
+        const newAccuracy = ((score / (score + newMisses)) * 100) || 0
+        const roundedAccuracy = Math.round(newAccuracy* 100) / 100
+        setAccuracy(roundedAccuracy)
+        return newMisses;
+      });
+    }
   }
 
 
@@ -53,7 +75,12 @@ export default function grid() {
 
       {
         boxArray.map((box, index) => (
-          <Box box={box} key={index} />
+          <Box
+            box={box}
+            key={index}
+            storeCardSelected={() => storeCardSelected(index)}
+            selection={selectionInProgress}
+          />
         ))
       }
 

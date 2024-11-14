@@ -1,9 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap');
+
 * {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
 }
 
+body {
+  background-color: #F3CFC6;
+}
 
 .container {
   padding: 40px 0;
@@ -24,12 +29,12 @@
 
 .game__title {
   text-align: center;
-  font-size: 48px;
+  font-size: 56px;
+  font-family: "Sour Gummy";
 }
 
 
 #game__grid {
-  border: 1px solid black;
   height: 600px;
   width: 100%;
   display: flex;
@@ -41,7 +46,6 @@
 .game__grid-row {
   width: 100%;
   height: 25%;
-  /* border: 1px solid black; */
   display: flex;
   gap: 6px;
 }
@@ -50,7 +54,8 @@
 .game__grid-box {
   width: calc(25% - 6px);
   height: calc(25% - 6px);
-  border: 1px solid blue;
+  border: 3px solid rgb(57, 186, 190);
+  border-radius: 4px;
 }
 
 .game__grid-box-img {
@@ -67,7 +72,7 @@
 
 .game__stats {
   display: flex;
-  border: 1px solid black;
+  border: 4px solid black;
   justify-content: center;
   gap: 16px;
   padding: 8px 0;
